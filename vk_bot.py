@@ -18,17 +18,20 @@ def detect_intent_texts(project_id, session_id, texts, language_code='ru'):
         response = session_client.detect_intent(
             request={"session": session, "query_input": query_input}
         )
-        check = response.query_result.fulfillment_text
-        return check
+        if response.query_result.intent.is_fallback:
+            return None
+        else:
+            return response.query_result.fulfillment_text
 
 
 def echo(event, vk_api, project_id, session_id):
     dialog_chat = detect_intent_texts(project_id, session_id, [event.text], 'ru')
-    vk_api.messages.send(
-        user_id=event.user_id,
-        message=dialog_chat,
-        random_id=random.randint(1, 1000)
-    )
+    if dialog_chat:
+        vk_api.messages.send(
+            user_id=event.user_id,
+            message=dialog_chat,
+            random_id=random.randint(1, 1000)
+        )
 
 
 if __name__ == '__main__':
