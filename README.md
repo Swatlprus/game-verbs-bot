@@ -1,6 +1,8 @@
 # ВК и Telegram бот на DialogFlow
 Два бота: ВК и Telegram, которые отвечают на основе данных из DialogFlow
 
+<img src="./assets/tgbot.gif"/>
+
 ## Подготовка к запуску
 Для запуска сайта вам понадобится Python 3.8+ версии. 
 
