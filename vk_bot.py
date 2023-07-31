@@ -2,6 +2,7 @@ import time
 import random
 import logging
 import requests
+import telegram
 
 from environs import Env
 import vk_api as vk
