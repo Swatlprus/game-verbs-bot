@@ -29,8 +29,8 @@ VK_TOKEN=vk1.a.N0bsDBLyLESh35U7bfimAtiWjc9xhHeuF_vC
 ```
 TELEGRAM_TOKEN - Токен от Telegram бота. Создать его можно через https://t.me/BotFather<br>
 RESERVE_TELEGRAM_TOKEN - Токен от Telegram бота, который будет оповещать вас об ошибках. Создать его можно через https://t.me/BotFather<br>
-GOOGLE_APPLICATION_CREDENTIALS - Путь к файлу credentials.json. Набор ключей от аккаунта Google (https://cloud.google.com/docs/authentication/api-keys)
-PROJECT_ID - ID проекта из DialogFlow
+GOOGLE_APPLICATION_CREDENTIALS - Путь к файлу credentials.json. Набор ключей от аккаунта Google (https://cloud.google.com/docs/authentication/api-keys)<br>
+PROJECT_ID - ID проекта из DialogFlow<br>
 SESSION_ID - Уникальный ID чата. Узнать свой можно с помощью бота - https://t.me/userinfobot<br>
 VK_TOKEN - Токен от группы ВК. Получить его можно в настройках группы<br>
 
