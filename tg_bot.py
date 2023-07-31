@@ -1,7 +1,11 @@
-from environs import Env
+import time
+import requests
 import functools
-from google.cloud import dialogflow
 import logging
+
+from environs import Env
+from google.cloud import dialogflow
+import telegram
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
@@ -9,7 +13,19 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('Logger')
+
+
+class TelegramLogsHandler(logging.Handler):
+
+    def __init__(self, telegram_token, chat_id):
+        super().__init__()
+        self.chat_id = chat_id
+        self.tg_bot = telegram.Bot(token=telegram_token)
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
 def detect_intent_texts(project_id, session_id, texts, language_code='ru'):
@@ -66,6 +82,18 @@ if __name__ == '__main__':
     env = Env()
     env.read_env()
     telegram_token = env('TELEGRAM_TOKEN')
+    reserve_telegram_token = env('RESERVE_TELEGRAM_TOKEN')
     project_id = env('PROJECT_ID')
     session_id = env('SESSION_ID')
-    main(telegram_token, project_id, session_id)
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
+    logger.info('Telegram бот начал работу')
+    try:
+        main(telegram_token, project_id, session_id)
+    except requests.exceptions.HTTPError:
+        logger.error('Telegram бот упал с ошибкой HTTPError')
+    except requests.exceptions.ReadTimeout:
+        logger.debug('Telegram бот. Wait... I will try to send the request again')
+    except requests.exceptions.ConnectionError:
+        logger.error('Telegram бот упал с ошибкой ConnectionError')
+        time.sleep(10)

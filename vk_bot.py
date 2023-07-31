@@ -1,9 +1,31 @@
-from environs import Env
+import time
 import random
+import logging
+import requests
 
+from environs import Env
 import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
 from google.cloud import dialogflow
+
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+)
+
+logger = logging.getLogger('Logger')
+
+
+class TelegramLogsHandler(logging.Handler):
+
+    def __init__(self, telegram_token, chat_id):
+        super().__init__()
+        self.chat_id = chat_id
+        self.tg_bot = telegram.Bot(token=telegram_token)
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
 def detect_intent_texts(project_id, session_id, texts, language_code='ru'):
@@ -40,9 +62,21 @@ if __name__ == '__main__':
     project_id = env('PROJECT_ID')
     session_id = env('SESSION_ID')
     vk_token = env('VK_TOKEN')
+    reserve_telegram_token = env('RESERVE_TELEGRAM_TOKEN')
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
-    for event in longpoll.listen():
-        if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            echo(event, vk_api, project_id, session_id)
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
+    logger.info('ВК бот начал работу')
+    try:
+        for event in longpoll.listen():
+            if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                echo(event, vk_api, project_id, session_id)
+    except requests.exceptions.HTTPError:
+        logger.error('ВК бот упал с ошибкой HTTPError')
+    except requests.exceptions.ReadTimeout:
+        logger.debug('ВК бот. Wait... I will try to send the request again')
+    except requests.exceptions.ConnectionError:
+        logger.error('ВК бот упал с ошибкой ConnectionError')
+        time.sleep(10)
