@@ -9,9 +9,6 @@ import telegram
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
 
 logger = logging.getLogger('Logger')
 
@@ -79,13 +76,16 @@ def main(telegram_token, project_id, session_id) -> None:
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    )
+    logger.setLevel(logging.INFO)
     env = Env()
     env.read_env()
     telegram_token = env('TELEGRAM_TOKEN')
     reserve_telegram_token = env('RESERVE_TELEGRAM_TOKEN')
     project_id = env('PROJECT_ID')
     session_id = env('SESSION_ID')
-    logger.setLevel(logging.INFO)
     logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
     logger.info('Telegram бот начал работу')
     try:

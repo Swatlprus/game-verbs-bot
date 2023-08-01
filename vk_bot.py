@@ -10,10 +10,6 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 from google.cloud import dialogflow
 
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
-
 logger = logging.getLogger('Logger')
 
 
@@ -58,6 +54,10 @@ def echo(event, vk_api, project_id, session_id):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    )
+    logger.setLevel(logging.INFO)
     env = Env()
     env.read_env()
     project_id = env('PROJECT_ID')
@@ -67,7 +67,6 @@ if __name__ == '__main__':
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
-    logger.setLevel(logging.INFO)
     logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
     logger.info('ВК бот начал работу')
     try:
