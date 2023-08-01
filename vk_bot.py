@@ -14,7 +14,7 @@ logger = logging.getLogger('Logger')
 
 
 def answer_question(event, vk_api, project_id, session_id):
-    intent_question = detect_intent_texts(project_id, session_id, [event.text], 'ru')
+    intent_question = detect_intent_texts(project_id, f'vk-{session_id}', [event.text], 'ru')
     if intent_question:
         vk_api.messages.send(
             user_id=event.user_id,
@@ -31,7 +31,7 @@ def main():
     env = Env()
     env.read_env()
     project_id = env('PROJECT_ID')
-    session_id = f'vk-{env("SESSION_ID")}'
+    session_id = env('SESSION_ID')
     vk_token = env('VK_TOKEN')
     reserve_telegram_token = env('RESERVE_TELEGRAM_TOKEN')
     vk_session = vk.VkApi(token=vk_token)

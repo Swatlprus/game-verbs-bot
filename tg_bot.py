@@ -23,7 +23,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def answer_question(project_id, session_id, update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
-    intent_question = detect_intent_texts(project_id, session_id, [update.message.text], 'ru')
+    intent_question = detect_intent_texts(project_id, f'tg-{session_id}', [update.message.text], 'ru')
     update.message.reply_text(intent_question)
 
 
@@ -50,7 +50,7 @@ def main():
     telegram_token = env('TELEGRAM_TOKEN')
     reserve_telegram_token = env('RESERVE_TELEGRAM_TOKEN')
     project_id = env('PROJECT_ID')
-    session_id = f'tg-{env("SESSION_ID")}'
+    session_id = env('SESSION_ID')
     logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
     logger.info('Telegram бот начал работу')
     try:

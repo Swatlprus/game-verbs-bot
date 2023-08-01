@@ -86,7 +86,7 @@ systemctl enable tgbot
 
 Проверить, запустился ли юнит, используйте команду:
 ```shell
-journalctl -u tgbot
+systemctl status tgbot
 ```
 
 Аналогично нужно проделать и для Вконтакте-бота.
