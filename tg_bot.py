@@ -50,11 +50,11 @@ def main():
     telegram_token = env('TELEGRAM_TOKEN')
     reserve_telegram_token = env('RESERVE_TELEGRAM_TOKEN')
     project_id = env('PROJECT_ID')
-    session_id = env('SESSION_ID')
+    session_id = f'tg-{env("SESSION_ID")}'
     logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
     logger.info('Telegram бот начал работу')
     try:
-        start(telegram_token, project_id, session_id)
+        search_command(telegram_token, project_id, session_id)
     except requests.exceptions.HTTPError:
         logger.error('Telegram бот упал с ошибкой HTTPError')
     except requests.exceptions.ReadTimeout:
