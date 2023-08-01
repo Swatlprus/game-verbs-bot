@@ -13,18 +13,6 @@ from google_spreadsheets_api import TelegramLogsHandler, detect_intent_texts
 logger = logging.getLogger('Logger')
 
 
-class TelegramLogsHandler(logging.Handler):
-
-    def __init__(self, telegram_token, chat_id):
-        super().__init__()
-        self.chat_id = chat_id
-        self.tg_bot = telegram.Bot(token=telegram_token)
-
-    def emit(self, record):
-        log_entry = self.format(record)
-        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
-
-
 def answer_question(event, vk_api, project_id, session_id):
     dialog_chat = detect_intent_texts(project_id, session_id, [event.text], 'ru')
     if dialog_chat:
@@ -35,7 +23,7 @@ def answer_question(event, vk_api, project_id, session_id):
         )
 
 
-if __name__ == '__main__':
+def main():
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
     )
@@ -54,7 +42,7 @@ if __name__ == '__main__':
     try:
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                echo(event, vk_api, project_id, session_id)
+                answer_question(event, vk_api, project_id, session_id)
     except requests.exceptions.HTTPError:
         logger.error('ВК бот упал с ошибкой HTTPError')
     except requests.exceptions.ReadTimeout:
@@ -62,3 +50,7 @@ if __name__ == '__main__':
     except requests.exceptions.ConnectionError:
         logger.error('ВК бот упал с ошибкой ConnectionError')
         time.sleep(10)
+
+
+if __name__ == '__main__':
+    main()

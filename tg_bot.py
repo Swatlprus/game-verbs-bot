@@ -27,21 +27,21 @@ def answer_question(project_id, session_id, update: Update, context: CallbackCon
     update.message.reply_text(check)
 
 
-def main(telegram_token, project_id, session_id) -> None:
+def start(telegram_token, project_id, session_id) -> None:
     updater = Updater(telegram_token)
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
-    end = functools.partial(echo, project_id, session_id)
+    end = functools.partial(answer_question, project_id, session_id)
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, end))
 
     updater.start_polling()
     updater.idle()
 
 
-if __name__ == '__main__':
+def main():
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
     )
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
     logger.info('Telegram бот начал работу')
     try:
-        main(telegram_token, project_id, session_id)
+        start(telegram_token, project_id, session_id)
     except requests.exceptions.HTTPError:
         logger.error('Telegram бот упал с ошибкой HTTPError')
     except requests.exceptions.ReadTimeout:
@@ -63,3 +63,7 @@ if __name__ == '__main__':
     except requests.exceptions.ConnectionError:
         logger.error('Telegram бот упал с ошибкой ConnectionError')
         time.sleep(10)
+
+
+if __name__ == '__main__':
+    main()
