@@ -30,8 +30,8 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
     print("Intent created: {}".format(response))
 
 
-def open_file():
-    with open("questions.json", "r") as questions_file:
+def open_file(base_questions):
+    with open(base_questions, "r") as questions_file:
         questions_json = questions_file.read()
 
     questions = json.loads(questions_json)
@@ -44,7 +44,8 @@ if __name__ == '__main__':
     env = Env()
     env.read_env()
     project_id = env('PROJECT_ID')
-    training_phrases_parts, message_texts = open_file()
+    base_questions = env('BASE_QUESTIONS', 'questions.json')
+    training_phrases_parts, message_texts = open_file(base_questions)
     create_intent(
         project_id,
         'Как устроиться к вам на работу',

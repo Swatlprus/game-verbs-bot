@@ -28,6 +28,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/gcloud/application_default_credentials.json
 PROJECT_ID=dvmn-343243
 SESSION_ID=3145354354
 VK_TOKEN=vk1.a.N0bsDBLyLESh35U7bfimAtiWjc9xhHeuF_vC
+BASE_QUESTIONS=questions.json
 ```
 TELEGRAM_TOKEN - Токен от Telegram бота. Создать его можно через https://t.me/BotFather<br>
 RESERVE_TELEGRAM_TOKEN - Токен от Telegram бота, который будет оповещать вас об ошибках. Создать его можно через https://t.me/BotFather<br>
@@ -35,6 +36,7 @@ GOOGLE_APPLICATION_CREDENTIALS - Путь к файлу credentials.json. Наб
 PROJECT_ID - ID проекта из DialogFlow<br>
 SESSION_ID - Уникальный ID чата. Узнать свой можно с помощью бота - https://t.me/userinfobot<br>
 VK_TOKEN - Токен от группы ВК. Получить его можно в настройках группы<br>
+BASE_QUESTIONS - путь к JSON файлу с набором вопросов для обучения DialogFlow<br>
 
 ## Обучить DialogFlow набору фраз
 В файле questions.json лежит пример для обучения фразам
