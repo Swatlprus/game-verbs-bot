@@ -23,19 +23,18 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def answer_question(project_id, session_id, update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
-    check = detect_intent_texts(project_id, session_id, [update.message.text], 'ru')
-    update.message.reply_text(check)
+    intent_question = detect_intent_texts(project_id, session_id, [update.message.text], 'ru')
+    update.message.reply_text(intent_question)
 
 
-def start(telegram_token, project_id, session_id) -> None:
+def search_command(telegram_token, project_id, session_id) -> None:
     updater = Updater(telegram_token)
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
 
-    end = functools.partial(answer_question, project_id, session_id)
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, end))
+    answer = functools.partial(answer_question, project_id, session_id)
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, answer))
 
     updater.start_polling()
     updater.idle()

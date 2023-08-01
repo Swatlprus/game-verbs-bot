@@ -14,11 +14,11 @@ logger = logging.getLogger('Logger')
 
 
 def answer_question(event, vk_api, project_id, session_id):
-    dialog_chat = detect_intent_texts(project_id, session_id, [event.text], 'ru')
-    if dialog_chat:
+    intent_question = detect_intent_texts(project_id, session_id, [event.text], 'ru')
+    if intent_question:
         vk_api.messages.send(
             user_id=event.user_id,
-            message=dialog_chat,
+            message=intent_question,
             random_id=random.randint(1, 1000)
         )
 
