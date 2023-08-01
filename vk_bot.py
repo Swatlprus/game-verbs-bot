@@ -25,7 +25,7 @@ class TelegramLogsHandler(logging.Handler):
         self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
-def echo(event, vk_api, project_id, session_id):
+def answer_question(event, vk_api, project_id, session_id):
     dialog_chat = detect_intent_texts(project_id, session_id, [event.text], 'ru')
     if dialog_chat:
         vk_api.messages.send(

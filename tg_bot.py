@@ -21,7 +21,7 @@ def start(update: Update, context: CallbackContext) -> None:
     )
 
 
-def echo(project_id, session_id, update: Update, context: CallbackContext) -> None:
+def answer_question(project_id, session_id, update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
     check = detect_intent_texts(project_id, session_id, [update.message.text], 'ru')
     update.message.reply_text(check)
