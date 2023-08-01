@@ -34,14 +34,17 @@ if __name__ == '__main__':
     env.read_env()
     project_id = env('PROJECT_ID')
     base_questions = env('BASE_QUESTIONS', 'questions.json')
+
     with open(base_questions, "r") as questions_file:
         questions_json = questions_file.read()
     questions = json.loads(questions_json)
-    training_phrases_parts = questions['Устройство на работу']['questions']
-    message_texts = questions['Устройство на работу']['answer']
-    create_intent(
-        project_id,
-        'Как устроиться к вам на работу',
-        training_phrases_parts,
-        [message_texts],
-    )
+
+    for intent in questions.keys():
+        training_phrases_parts = questions[intent]['questions']
+        message_texts = questions[intent]['answer']
+        create_intent(
+            project_id,
+            intent,
+            training_phrases_parts,
+            [message_texts],
+        )
