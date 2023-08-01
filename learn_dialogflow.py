@@ -26,18 +26,7 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
     response = intents_client.create_intent(
         request={"parent": parent, "intent": intent}
     )
-
-    print("Intent created: {}".format(response))
-
-
-def open_file(base_questions):
-    with open(base_questions, "r") as questions_file:
-        questions_json = questions_file.read()
-
-    questions = json.loads(questions_json)
-    training_phrases_parts = questions['Устройство на работу']['questions']
-    message_texts = questions['Устройство на работу']['answer']
-    return training_phrases_parts, message_texts
+    return response
 
 
 if __name__ == '__main__':
@@ -45,7 +34,11 @@ if __name__ == '__main__':
     env.read_env()
     project_id = env('PROJECT_ID')
     base_questions = env('BASE_QUESTIONS', 'questions.json')
-    training_phrases_parts, message_texts = open_file(base_questions)
+    with open(base_questions, "r") as questions_file:
+        questions_json = questions_file.read()
+    questions = json.loads(questions_json)
+    training_phrases_parts = questions['Устройство на работу']['questions']
+    message_texts = questions['Устройство на работу']['answer']
     create_intent(
         project_id,
         'Как устроиться к вам на работу',
