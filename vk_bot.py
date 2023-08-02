@@ -13,7 +13,10 @@ logger = logging.getLogger('Logger')
 
 
 def answer_question(event, vk_api, project_id, session_id):
-    intent_question = detect_intent_texts(project_id, f'vk-{session_id}', [event.text], 'ru')
+    fallback, intent_question = detect_intent_texts(project_id, f'vk-{session_id}', [event.text], 'ru')
+    if fallback:
+        return None
+
     if intent_question:
         vk_api.messages.send(
             user_id=event.user_id,
