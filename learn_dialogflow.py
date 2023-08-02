@@ -33,9 +33,9 @@ if __name__ == '__main__':
     env = Env()
     env.read_env()
     project_id = env('PROJECT_ID')
-    base_questions = env('BASE_QUESTIONS', 'questions.json')
+    path_questions = env('PATH_QUESTIONS', 'questions.json')
 
-    with open(base_questions, "r") as questions_file:
+    with open(path_questions, "r") as questions_file:
         questions_json = questions_file.read()
     questions = json.loads(questions_json)
 
