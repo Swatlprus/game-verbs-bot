@@ -39,9 +39,9 @@ if __name__ == '__main__':
         questions_json = questions_file.read()
     questions = json.loads(questions_json)
 
-    for intent in questions.keys():
-        training_phrases_parts = questions[intent]['questions']
-        message_texts = questions[intent]['answer']
+    for intent, phrases in questions.items():
+        training_phrases_parts = phrases['questions']
+        message_texts = phrases['answer']
         create_intent(
             project_id,
             intent,
