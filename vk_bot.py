@@ -2,12 +2,11 @@ import time
 import random
 import logging
 import requests
-import telegram
 
 from environs import Env
 import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
-from google_spreadsheets_api import TelegramLogsHandler, detect_intent_texts
+from google_cloud_api import TelegramLogsHandler, detect_intent_texts
 
 
 logger = logging.getLogger('Logger')

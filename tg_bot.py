@@ -6,7 +6,7 @@ import logging
 from environs import Env
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
-from google_spreadsheets_api import TelegramLogsHandler, detect_intent_texts
+from google_cloud_api import TelegramLogsHandler, detect_intent_texts
 
 
 logger = logging.getLogger('Logger')
@@ -27,7 +27,7 @@ def answer_question(project_id, session_id, update: Update, context: CallbackCon
     update.message.reply_text(intent_question)
 
 
-def search_command(telegram_token, project_id, session_id) -> None:
+def get_message(telegram_token, project_id, session_id) -> None:
     updater = Updater(telegram_token)
     dispatcher = updater.dispatcher
 
@@ -54,7 +54,7 @@ def main():
     logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
     logger.info('Telegram бот начал работу')
     try:
-        search_command(telegram_token, project_id, session_id)
+        get_message(telegram_token, project_id, session_id)
     except requests.exceptions.HTTPError:
         logger.error('Telegram бот упал с ошибкой HTTPError')
     except requests.exceptions.ReadTimeout:
