@@ -12,8 +12,9 @@ from google_cloud_api import TelegramLogsHandler, detect_intent_texts
 logger = logging.getLogger('Logger')
 
 
-def answer_question(event, vk_api, project_id, session_id):
-    fallback, intent_question = detect_intent_texts(project_id, f'vk-{session_id}', [event.text], 'ru')
+def answer_question(event, vk_api, project_id):
+    user_id = event.user_id
+    fallback, intent_question = detect_intent_texts(project_id, f'vk-{user_id}', [event.text], 'ru')
     if fallback:
         return None
 
@@ -44,7 +45,7 @@ def main():
     try:
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                answer_question(event, vk_api, project_id, session_id)
+                answer_question(event, vk_api, project_id)
     except requests.exceptions.HTTPError:
         logger.error('ВК бот упал с ошибкой HTTPError')
     except requests.exceptions.ReadTimeout:

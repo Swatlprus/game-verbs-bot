@@ -21,19 +21,20 @@ def start(update: Update, context: CallbackContext) -> None:
     )
 
 
-def answer_question(project_id, session_id, update: Update, context: CallbackContext) -> None:
+def answer_question(project_id, update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
-    fallback, intent_question = detect_intent_texts(project_id, f'tg-{session_id}', [update.message.text], 'ru')
+    chat_id = update.message.chat_id
+    fallback, intent_question = detect_intent_texts(project_id, f'tg-{chat_id}', [update.message.text], 'ru')
     update.message.reply_text(intent_question)
 
 
-def get_message(telegram_token, project_id, session_id) -> None:
+def get_message(telegram_token, project_id) -> None:
     updater = Updater(telegram_token)
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
 
-    answer = functools.partial(answer_question, project_id, session_id)
+    answer = functools.partial(answer_question, project_id)
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, answer))
 
     updater.start_polling()
@@ -54,7 +55,7 @@ def main():
     logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
     logger.info('Telegram бот начал работу')
     try:
-        get_message(telegram_token, project_id, session_id)
+        get_message(telegram_token, project_id)
     except requests.exceptions.HTTPError:
         logger.error('Telegram бот упал с ошибкой HTTPError')
     except requests.exceptions.ReadTimeout:
