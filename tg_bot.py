@@ -26,7 +26,7 @@ def answer_question(project_id, update: Update, context: CallbackContext) -> Non
     update.message.reply_text(intent_question)
 
 
-def get_message(telegram_token, project_id) -> None:
+def start_tg_bot(telegram_token, project_id) -> None:
     updater = Updater(telegram_token)
     dispatcher = updater.dispatcher
 
