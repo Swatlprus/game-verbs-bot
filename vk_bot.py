@@ -14,7 +14,7 @@ logger = logging.getLogger('Logger')
 
 def answer_question(event, vk_api, project_id):
     user_id = event.user_id
-    fallback, intent_question = detect_intent_texts(project_id, f'vk-{user_id}', [event.text], 'ru')
+    fallback, intent_question = detect_intent_texts(project_id, f'vk-{user_id}', event.text, 'ru')
     if fallback:
         return None
 
@@ -34,13 +34,13 @@ def main():
     env = Env()
     env.read_env()
     project_id = env('PROJECT_ID')
-    session_id = env('SESSION_ID')
+    admin_tg_id = env('ADMIN_TG_ID')
     vk_token = env('VK_TOKEN')
     reserve_telegram_token = env('RESERVE_TELEGRAM_TOKEN')
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
-    logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
+    logger.addHandler(TelegramLogsHandler(reserve_telegram_token, admin_tg_id))
     logger.info('ВК бот начал работу')
     try:
         for event in longpoll.listen():

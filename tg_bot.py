@@ -22,7 +22,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def answer_question(project_id, update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
-    fallback, intent_question = detect_intent_texts(project_id, f'tg-{chat_id}', [update.message.text], 'ru')
+    fallback, intent_question = detect_intent_texts(project_id, f'tg-{chat_id}', update.message.text, 'ru')
     update.message.reply_text(intent_question)
 
 
@@ -49,11 +49,11 @@ def main():
     telegram_token = env('TELEGRAM_TOKEN')
     reserve_telegram_token = env('RESERVE_TELEGRAM_TOKEN')
     project_id = env('PROJECT_ID')
-    session_id = env('SESSION_ID')
-    logger.addHandler(TelegramLogsHandler(reserve_telegram_token, session_id))
+    admin_tg_id = env('ADMIN_TG_ID')
+    logger.addHandler(TelegramLogsHandler(reserve_telegram_token, admin_tg_id))
     logger.info('Telegram бот начал работу')
     try:
-        get_message(telegram_token, project_id)
+        start_tg_bot(telegram_token, project_id)
     except requests.exceptions.HTTPError:
         logger.error('Telegram бот упал с ошибкой HTTPError')
     except requests.exceptions.ReadTimeout:
