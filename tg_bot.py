@@ -13,7 +13,6 @@ logger = logging.getLogger('Logger')
 
 
 def start(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /start is issued."""
     user = update.effective_user
     update.message.reply_markdown_v2(
         fr'Здравствуйте {user.mention_markdown_v2()}\!',
@@ -22,7 +21,6 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def answer_question(project_id, update: Update, context: CallbackContext) -> None:
-    """Echo the user message."""
     chat_id = update.message.chat_id
     fallback, intent_question = detect_intent_texts(project_id, f'tg-{chat_id}', [update.message.text], 'ru')
     update.message.reply_text(intent_question)
