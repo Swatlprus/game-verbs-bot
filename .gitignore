@@ -2,6 +2,7 @@ credentials.json
 .env
 venv/
 test.py
+application_default_credentials.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
